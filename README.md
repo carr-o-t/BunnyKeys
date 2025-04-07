@@ -11,7 +11,6 @@ A delightful typing speed test application with a bunny theme! Practice your typ
 - 📊 Detailed typing statistics and performance graphs
 - ⏱️ Flexible time duration options (30s, 60s, 120s)
 - 🌙 Dark mode support
-- 🎵 Cute bunny sound effects
 - 📱 Fully responsive design
 
 ## 🚀 Quick Start
