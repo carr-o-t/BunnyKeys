@@ -6,7 +6,7 @@ type BunnyMoodProps = {
   timeLeft: number;
 };
 
-export function BunnyMood({ isTypingCorrect, isTimeRunningOut, timeLeft }: BunnyMoodProps) {
+export function BunnyMood({ isTypingCorrect, timeLeft }: BunnyMoodProps) {
   const getBunnyMood = () => {
     if (timeLeft <= 5) return "panic";
     if (!isTypingCorrect) return "sad";

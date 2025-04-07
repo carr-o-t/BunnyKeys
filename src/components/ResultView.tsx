@@ -1,5 +1,4 @@
 import { Doodles } from './Doodles';
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { getSpeedAchievement } from '../utils/speedAchievements';
 
 type ResultViewProps = {
@@ -10,16 +9,14 @@ type ResultViewProps = {
   errorHistory: number[];
 };
 
-type ChartData = {
-  time: number;
-  wpm: number;
-  raw: number;
-  errors: number;
-};
+// type ChartData = {
+//   time: number;
+//   wpm: number;
+//   raw: number;
+//   errors: number;
+// };
 
-// Remove the next/image import
-
-export function ResultView({ wpm, accuracy, wpmHistory, rawWpmHistory, errorHistory }: ResultViewProps) {
+export function ResultView({ wpm, accuracy }: ResultViewProps) {
   const achievement = getSpeedAchievement(wpm);
 
   return (
