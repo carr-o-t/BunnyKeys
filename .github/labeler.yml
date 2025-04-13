@@ -25,8 +25,7 @@ dependencies:
 
 # Label: 'bugfix' for non-test source files
 bugfix:
-  - src/**/*.{ts,tsx}
-  - !src/**/*.test.{ts,tsx}  # Exclude test files
+  - src/**/!(*.test).{ts,tsx}  # exclude test files
 
 chore:
   - .github/**/*
