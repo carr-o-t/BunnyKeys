@@ -6,7 +6,7 @@ describe('MarkovChain Text Generator', () => {
       const generatedText = markovChain.generateText();
       const wordCount = generatedText.split(' ').length;
       
-      expect(wordCount).toBe(30); // Default word count
+      expect(wordCount).toBe(30); // Default word count test
       expect(typeof generatedText).toBe('string');
       expect(generatedText.length).toBeGreaterThan(0);
     });
