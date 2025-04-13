@@ -7,7 +7,7 @@ describe('Speed Achievements', () => {
       expect(achievement).toEqual({
         title: "Sleepy Bunny",
         message: "Taking it easy, hop by hop! 🌸",
-        illustration: "/illustrations/sleepy-bunny.svg",
+        illustration: "/illustrations/sleepy-bunny.svg", //comment
       });
     });
 
