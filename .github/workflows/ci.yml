@@ -7,6 +7,16 @@ on:
     branches: [ main, dev ]
 
 jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/labeler@v4
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -53,15 +63,3 @@ jobs:
     - name: Cleanup coverage files
       if: always()
       run: rm -rf ./coverage
-  
-  label:  # Auto-label PRs
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      issues: write
-      pull-requests: write
-    steps:
-      - uses: actions/labeler@v4
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
