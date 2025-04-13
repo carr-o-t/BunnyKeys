@@ -24,8 +24,10 @@ class MarkovChain {
   }
 
   generateText(wordCount: number = 30): string {
+    if (wordCount <= 0) return '';
+    
     let currentWord = this.startWords[Math.floor(Math.random() * this.startWords.length)];
-    let result = [currentWord];
+    const result = [currentWord];
 
     for (let i = 1; i < wordCount; i++) {
       const nextWords = this.chain.get(currentWord);
