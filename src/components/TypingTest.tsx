@@ -1,115 +1,52 @@
-import { useEffect, useRef, useState } from 'react';
-import { markovChain } from '../utils/textGenerator';
+import { cn } from '@/lib/utils';
+import { useRef, useState } from 'react';
+import { useTypingGame } from '../hooks/useTypingGame';
 import { BunnyMood } from './BunnyMood';
 import { Doodles } from './Doodles';
 import { ResultView } from './ResultView';
 import { TimerOptions } from './TimerOptions';
-import { cn } from '@/lib/utils';
 
 export function TypingTest() {
   const [selectedTime, setSelectedTime] = useState(30);
-  const [timeLeft, setTimeLeft] = useState(selectedTime);
-  const [textChunks, setTextChunks] = useState<string[]>([markovChain.generateText(30)]);
-  const [input, setInput] = useState('');
-  const [isStarted, setIsStarted] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
-  const [wpmHistory, setWpmHistory] = useState<number[]>([]);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
-  const [mistakes, setMistakes] = useState(0);
-  const [isTypingCorrect, setIsTypingCorrect] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
-  
-  const [errorHistory, setErrorHistory] = useState<number[]>([]);
-  const [rawWpmHistory, setRawWpmHistory] = useState<number[]>([]);
-  const [currentErrors, setCurrentErrors] = useState(0);
-  
   const inputRef = useRef<HTMLInputElement>(null);
-  const text = textChunks.join(' ');
 
-  useEffect(() => {
-    if (isStarted && timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-        const currentWPM = calculateWPM();
-        const rawWPM = calculateRawWPM();
-        setWpmHistory(prev => [...prev, currentWPM]);
-        setRawWpmHistory(prev => [...prev, rawWPM]);
-        setErrorHistory(prev => [...prev, currentErrors]);
-        setCurrentErrors(0); // Reset errors for next second
-      }, 1000);
-
-      return () => clearInterval(timer);
-    } else if (timeLeft === 0) {
-      setIsFinished(true);
-    }
-  }, [isStarted, timeLeft]);
+  const {
+    timeLeft,
+    text,
+    input,
+    isFinished,
+    isStarted,
+    wpmHistory,
+    rawWpmHistory,
+    errorHistory,
+    currentCharIndex,
+    isTypingCorrect,
+    handleInput,
+    reset,
+    stats,
+    charAccuracy,
+  } = useTypingGame(selectedTime);
 
   const handleTimeSelect = (time: number) => {
     if (!isStarted) {
       setSelectedTime(time);
-      setTimeLeft(time);
+      reset(); // Reset the game state with new time
     }
-  };
-
-  const calculateWPM = () => {
-    const wordsTyped = input.trim().split(' ').length;
-    const minutes = (selectedTime - timeLeft) / 60;
-    return Math.round(wordsTyped / minutes) || 0;
-  };
-
-  const calculateRawWPM = () => {
-    const totalChars = input.length;
-    const minutes = (selectedTime - timeLeft) / 60;
-    // Standard: 5 characters = 1 word
-    return Math.round((totalChars / 5) / minutes) || 0;
-  };
-
-
-  const calculateAccuracy = () => {
-    if (input.length === 0) return 100;
-    return Math.round(((input.length - mistakes) / input.length) * 100);
-  };
-
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (!isStarted) setIsStarted(true);
-    
-    if (value.length > input.length) {
-      const isCorrect = value[value.length - 1] === text[value.length - 1];
-      setIsTypingCorrect(isCorrect);
-      if (!isCorrect) {
-        setMistakes(prev => prev + 1);
-        setCurrentErrors(prev => prev + 1); // Track errors per second
-      }
-    }
-    
-    if (value.length > text.length - 50 && !isFinished) {
-      setTextChunks(prev => [...prev, markovChain.generateText(30)]);
-    }
-    
-    setInput(value);
-    setCurrentCharIndex(value.length);
   };
 
   const handleRefresh = () => {
-    setTextChunks([markovChain.generateText(30)]);
-    setInput('');
-    setTimeLeft(selectedTime);
-    setIsStarted(false);
-    setIsFinished(false);
-    setWpmHistory([]);
-    setCurrentCharIndex(0);
-    setMistakes(0);
-    setIsTypingCorrect(true);
+    reset();
     if (inputRef.current) inputRef.current.focus();
   };
+
 
   if (isFinished) {
     return (
       <div className="w-full max-w-[1200px] mx-auto">
         <ResultView 
-          wpm={calculateWPM()} 
-          accuracy={calculateAccuracy()} 
+          wpm={stats.wpm} 
+          accuracy={stats.accuracy} 
           wpmHistory={wpmHistory}
           rawWpmHistory={rawWpmHistory}
           errorHistory={errorHistory}
@@ -131,7 +68,7 @@ export function TypingTest() {
   return (
     <>
       <Doodles />
-      <TimerOptions selectedTime={selectedTime} onTimeSelect={handleTimeSelect} />
+      <TimerOptions selectedTime={selectedTime} onTimeSelect={handleTimeSelect} isStarted={isStarted} />
       <div 
         className="w-full max-w-[1200px] px-4 bg-white/50 dark:bg-black/10 backdrop-blur-sm rounded-3xl p-8 shadow-lg border-2 border-[#FFD1DC] dark:border-[#ff99b48f]"
         onClick={() => inputRef.current?.focus()}
@@ -150,7 +87,7 @@ export function TypingTest() {
                   index === currentCharIndex ? 'border-none' : ''
                 } ${
                   index < currentCharIndex
-                    ? input[index] === char
+                    ? charAccuracy[index]
                       ? 'text-[#FF6B95]'
                       : 'bg-[#FFE8EF] text-[#FF4D7D] dark:text-[#ff99b48f] relative after:content-["❌"] after:absolute after:-top-4 after:left-0 after:text-sm after:animate-bounce'
                     : 'text-[#FFB6C1] dark:text-[#ffb6c170]'
@@ -165,7 +102,7 @@ export function TypingTest() {
             ref={inputRef}
             type="text"
             value={input}
-            onChange={handleInput}
+            onChange={(e) => handleInput(e.target.value)}
             className="absolute top-0 left-0 w-full h-full opacity-0 cursor-default"
             autoFocus
             onFocus={() => setIsFocused(true)}
