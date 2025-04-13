@@ -31,7 +31,7 @@ jobs:
     - name: Run tests
       run: npm test
       env:
-        CI: true  # Forces CI-mode for test runners
+        CI: true  # Force CI-mode for test runners
 
     - name: Build
       run: npm run build
@@ -41,6 +41,7 @@ jobs:
       continue-on-error: true
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        slug: carr-o-t/BunnyKeys
         file: ./coverage/lcov.info
         flags: unittests
   
