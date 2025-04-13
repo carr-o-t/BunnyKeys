@@ -12,7 +12,6 @@ export function ThemeToggle() {
       <div className="relative">
         {theme === 'light' ? (
           <div className="flex items-center gap-2">
-            {/* <span className="text-[#FF6B95]">(｡◕‿◕｡)</span> */}
             <motion.span
               className="text-yellow-400"
               animate={{ rotate: [0, 15, -15, 0] }}
@@ -23,7 +22,6 @@ export function ThemeToggle() {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            {/* <span className="text-[#FF6B95]">(ᴗ˳ᴗ)</span> */}
             <motion.span
               className="text-blue-400"
               animate={{ y: [0, -3, 0] }}
