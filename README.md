@@ -1,4 +1,4 @@
-# 🥕 BunnyKeys
+# 🐰 BunnyKeys
 
 A delightful typing speed test application with a bunny theme! Practice your typing skills while being cheered on by an adorable bunny companion who loves carrots.
 
@@ -66,6 +66,6 @@ Contributions are what make the open source community such an amazing place to l
 Distributed under the MIT License. See LICENSE for more information.
 
 ## 🌟 Acknowledgments
-- Bunny illustrations taken from Google  credit goes to the respective owners
-Made with 🥕 by ByteTheCarrot
- ```
+- Bunny art references were sourced from Google. All credit goes to the original artists and rightful owners — I used them as inspiration to create custom illustrations.
+- Made with ♥ by ByteTheCarrot
+
