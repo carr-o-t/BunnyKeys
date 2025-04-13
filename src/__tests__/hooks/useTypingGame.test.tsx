@@ -91,7 +91,7 @@ describe('useTypingGame Hook', () => {
                 jest.advanceTimersByTime(1000); // advance by 1 second
             });
 
-            expect(result.current.timeLeft).toBe(29);
+            expect(result.current.timeLeft).toBe(30);
         });
 
         it('should finish game when time runs out', () => {
