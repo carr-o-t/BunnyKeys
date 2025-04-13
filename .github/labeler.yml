@@ -1,0 +1,32 @@
+# .github/labeler.yml
+
+# Label: 'test' if test files are modified
+test:
+  - src/**/*.test.{ts,tsx}
+  - tests/**/*.{ts,tsx}
+
+# Label: 'feature' for component/hook changes
+feature:
+  - src/components/**/*
+  - src/hooks/**/*
+
+# Label: 'docs' for documentation updates
+docs:
+  - '**/*.md'
+  - docs/**/*
+  - README.md
+
+# Label: 'dependencies' for package changes
+dependencies:
+  - package.json
+  - yarn.lock
+  - package-lock.json
+  - pnpm-lock.yaml
+
+# Label: 'bugfix' for non-test source files
+bugfix:
+  - src/**/*.{ts,tsx}
+  - !src/**/*.test.{ts,tsx}  # Exclude test files
+
+chore:
+  - .github/**/*
