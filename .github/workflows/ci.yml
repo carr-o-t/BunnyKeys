@@ -36,14 +36,23 @@ jobs:
     - name: Build
       run: npm run build
 
+    - name: Run tests with coverage
+      run: npm run test:coverage
+      env:
+        CI: true
+
     - name: Upload coverage reports
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       continue-on-error: true
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: carr-o-t/BunnyKeys
         file: ./coverage/lcov.info
         flags: unittests
+
+    - name: Cleanup coverage files
+      if: always()
+      run: rm -rf ./coverage
   
   label:  # Auto-label PRs
     needs: test
