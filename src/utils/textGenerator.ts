@@ -24,8 +24,10 @@ class MarkovChain {
   }
 
   generateText(wordCount: number = 30): string {
+    if (wordCount <= 0) return '';
+    
     let currentWord = this.startWords[Math.floor(Math.random() * this.startWords.length)];
-    let result = [currentWord];
+    const result = [currentWord];
 
     for (let i = 1; i < wordCount; i++) {
       const nextWords = this.chain.get(currentWord);
@@ -45,7 +47,6 @@ const sampleTexts = [
   "the quick brown fox jumps over the lazy dog while the cat sleeps peacefully in the sun",
   "coding is fun and challenging but practice makes perfect when learning new skills",
   "music fills the air with melody and rhythm as people dance to the beat of their hearts",
-  // Add more sample texts for better generation
 ];
 
 export const markovChain = new MarkovChain(sampleTexts);
