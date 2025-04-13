@@ -13,8 +13,9 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
+      actions: read
     steps:
-      - uses: actions/labeler@v4
+      - uses: actions/labeler@v5
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
