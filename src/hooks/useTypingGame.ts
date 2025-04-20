@@ -47,31 +47,50 @@ export function useTypingGame(selectedTime: number) {
 
   const handleInput = (value: string) => {
     if (!isStarted) setIsStarted(true);
-    
-    if (value.length > input.length) {
-      // Handle multiple characters being added
-      const newChars = value.slice(input.length);
-      const startIndex = input.length;
-      
-      [...newChars].forEach((char, idx) => {
-        const isCorrect = char === text[startIndex + idx];
-        setCharAccuracy(prev => [...prev, isCorrect]);
-        if (!isCorrect) {
-          setMistakes(prev => prev + 1);
-          setCurrentErrors(prev => prev + 1);
-        }
-      });
-      
-      setIsTypingCorrect(value[value.length - 1] === text[value.length - 1]);
+  
+    const prevInput = input;
+    const newInput = value;
+    const updatedAccuracy: boolean[] = [];
+  
+    let newMistakes = 0;
+  
+    for (let i = 0; i < newInput.length; i++) {
+      const correctChar = text[i];
+      const typedChar = newInput[i];
+      const wasPreviouslyWrong = charAccuracy[i] === false;
+  
+      const isCorrect = typedChar === correctChar;
+      updatedAccuracy[i] = isCorrect;
+  
+      if (!isCorrect && (charAccuracy[i] === undefined || charAccuracy[i] === true)) {
+        newMistakes += 1;
+      }
+  
+      // If previously incorrect and now corrected
+      if (isCorrect && wasPreviouslyWrong) {
+        newMistakes -= 1;
+      }
     }
-    
-    if (value.length > text.length - 50 && !isFinished) {
+  
+    // If user deleted characters
+    if (newInput.length < prevInput.length) {
+      updatedAccuracy.splice(newInput.length);
+    }
+  
+    setCharAccuracy(updatedAccuracy);
+    setMistakes(prev => prev + newMistakes);
+    setCurrentErrors(updatedAccuracy.filter(c => c === false).length);
+  
+    setIsTypingCorrect(newInput[newInput.length - 1] === text[newInput.length - 1]);
+  
+    if (newInput.length > text.length - 50 && !isFinished) {
       setTextChunks(prev => [...prev, markovChain.generateText(30)]);
     }
-    
-    setInput(value);
-    setCurrentCharIndex(value.length);
+  
+    setInput(newInput);
+    setCurrentCharIndex(newInput.length);
   };
+  
 
    // Update timeLeft when selectedTime changes
    useEffect(() => {
